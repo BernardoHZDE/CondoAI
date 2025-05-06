@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Moradores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 border-r border-gray-200 bg-white">
+                <div class="h-16 flex items-center px-4 border-b border-gray-200">
+                    <h1 class="text-xl font-bold text-gray-800">Condomínio Vista</h1>
+                </div>
+                <div class="flex-1 flex flex-col overflow-y-auto">
+                    <nav class="flex-1 px-2 py-4 space-y-1">
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-ticket-alt mr-3"></i>
+                            Chamados
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md">
+                            <i class="fas fa-users mr-3"></i>
+                            Moradores
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-building mr-3"></i>
+                            Unidades
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-envelope mr-3"></i>
+                            Mensagens
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-cog mr-3"></i>
+                            Configurações
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-gray-200">
+                    <div class="flex items-center">
+                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-700">Admin Silva</p>
+                            <p class="text-xs font-medium text-gray-500">Administrador</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 overflow-auto flex flex-col">
+            <!-- Header -->
+            <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200 bg-white">
+                <div class="flex items-center">
+                    <button class="md:hidden mr-4 text-gray-500">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="text-lg font-semibold text-gray-800">Gerenciamento de Moradores</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-auto p-6">
+                <div class="bg-white shadow rounded-lg overflow-hidden">
+                    <!-- Toolbar -->
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="relative">
+                                <input type="text" placeholder="Buscar morador..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openAddResidentModal()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <i class="fas fa-plus mr-2"></i>
+                            Adicionar Morador
+                        </button>
+                    </div>
+
+                    <!-- Residents table -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Nome
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        WhatsApp
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Email
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Unidade
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ações
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Resident 1 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Maria Oliveira</div>
+                                                <div class="text-sm text-gray-500">Proprietária</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">(11) 98765-4321</div>
+                                        <div class="text-sm text-gray-500">WhatsApp</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">maria.oliveira@email.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Torre A - Apt 302</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Ativo
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button onclick="openEditResidentModal(1)" class="text-blue-600 hover:text-blue-900 mr-4">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="openDeleteConfirmModal(1)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Resident 2 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Carlos Souza</div>
+                                                <div class="text-sm text-gray-500">Proprietário</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">(11) 91234-5678</div>
+                                        <div class="text-sm text-gray-500">WhatsApp</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">carlos.souza@email.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Torre B - Apt 105</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Ativo
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button onclick="openEditResidentModal(2)" class="text-blue-600 hover:text-blue-900 mr-4">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="openDeleteConfirmModal(2)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Resident 3 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Ana Santos</div>
+                                                <div class="text-sm text-gray-500">Inquilina</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">(11) 99876-5432</div>
+                                        <div class="text-sm text-gray-500">WhatsApp</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">ana.santos@email.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Torre C - Apt 501</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            Pendente
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button onclick="openEditResidentModal(3)" class="text-blue-600 hover:text-blue-900 mr-4">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="openDeleteConfirmModal(3)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Resident 4 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">João Pereira</div>
+                                                <div class="text-sm text-gray-500">Proprietário</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">(11) 92345-6789</div>
+                                        <div class="text-sm text-gray-500">WhatsApp</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">joao.pereira@email.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Torre A - Apt 201</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Ativo
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button onclick="openEditResidentModal(4)" class="text-blue-600 hover:text-blue-900 mr-4">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="openDeleteConfirmModal(4)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Resident 5 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Pedro Almeida</div>
+                                                <div class="text-sm text-gray-500">Inquilino</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">(11) 93456-7890</div>
+                                        <div class="text-sm text-gray-500">WhatsApp</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">pedro.almeida@email.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Torre B - Apt 403</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            Inativo
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button onclick="openEditResidentModal(5)" class="text-blue-600 hover:text-blue-900 mr-4">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="openDeleteConfirmModal(5)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="bg-white px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                        <div class="flex-1 flex justify-between sm:hidden">
+                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Anterior
+                            </a>
+                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Próxima
+                            </a>
+                        </div>
+                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700">
+                                    Mostrando
+                                    <span class="font-medium">1</span>
+                                    a
+                                    <span class="font-medium">5</span>
+                                    de
+                                    <span class="font-medium">12</span>
+                                    resultados
+                                </p>
+                            </div>
+                            <div>
+                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Anterior</span>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                    <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        1
+                                    </a>
+                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        2
+                                    </a>
+                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        3
+                                    </a>
+                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Próxima</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Resident Modal -->
+    <div id="addResidentModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full fade-in slide-up">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                    Adicionar Novo Morador
+                                </h3>
+                                <button onclick="closeAddResidentModal()" class="text-gray-400 hover:text-gray-500">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="mt-4">
+                                <form id="addResidentForm">
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                        <div class="sm:col-span-6">
+                                            <label for="fullName" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                                            <input type="text" name="fullName" id="fullName" autocomplete="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                                            <input type="email" name="email" id="email" autocomplete="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="phone" class="block text-sm font-medium text-gray-700">Telefone (WhatsApp)</label>
+                                            <input type="tel" name="phone" id="phone" autocomplete="tel" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="unit" class="block text-sm font-medium text-gray-700">Unidade</label>
+                                            <select id="unit" name="unit" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                                <option value="">Selecione a unidade</option>
+                                                <option>Torre A - Apt 101</option>
+                                                <option>Torre A - Apt 102</option>
+                                                <option>Torre A - Apt 201</option>
+                                                <option>Torre A - Apt 202</option>
+                                                <option>Torre A - Apt 301</option>
+                                                <option>Torre A - Apt 302</option>
+                                                <option>Torre B - Apt 103</option>
+                                                <option>Torre B - Apt 104</option>
+                                                <option>Torre B - Apt 105</option>
+                                                <option>Torre B - Apt 203</option>
+                                                <option>Torre B - Apt 204</option>
+                                                <option>Torre B - Apt 205</option>
+                                                <option>Torre C - Apt 501</option>
+                                                <option>Torre C - Apt 502</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="type" class="block text-sm font-medium text-gray-700">Tipo</label>
+                                            <select id="type" name="type" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                                <option value="owner">Proprietário</option>
+                                                <option value="tenant">Inquilino</option>
+                                                <option value="relative">Familiar</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label for="profilePhoto" class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
+                                            <div class="mt-1 flex items-center">
+                                                <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
+                                                    <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                    </svg>
+                                                </span>
+                                                <button type="button" class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                    Alterar
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label for="notes" class="block text-sm font-medium text-gray-700">Observações</label>
+                                            <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="saveResident()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Salvar Morador
+                    </button>
+                    <button type="button" onclick="closeAddResidentModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Resident Modal -->
+    <div id="editResidentModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full fade-in slide-up">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                    Editar Morador
+                                </h3>
+                                <button onclick="closeEditResidentModal()" class="text-gray-400 hover:text-gray-500">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="mt-4">
+                                <form id="editResidentForm">
+                                    <input type="hidden" id="editResidentId">
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                        <div class="sm:col-span-6">
+                                            <label for="editFullName" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                                            <input type="text" name="editFullName" id="editFullName" autocomplete="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="editEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                                            <input type="email" name="editEmail" id="editEmail" autocomplete="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="editPhone" class="block text-sm font-medium text-gray-700">Telefone (WhatsApp)</label>
+                                            <input type="tel" name="editPhone" id="editPhone" autocomplete="tel" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="editUnit" class="block text-sm font-medium text-gray-700">Unidade</label>
+                                            <select id="editUnit" name="editUnit" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                                <option value="">Selecione a unidade</option>
+                                                <option>Torre A - Apt 101</option>
+                                                <option>Torre A - Apt 102</option>
+                                                <option>Torre A - Apt 201</option>
+                                                <option>Torre A - Apt 202</option>
+                                                <option>Torre A - Apt 301</option>
+                                                <option>Torre A - Apt 302</option>
+                                                <option>Torre B - Apt 103</option>
+                                                <option>Torre B - Apt 104</option>
+                                                <option>Torre B - Apt 105</option>
+                                                <option>Torre B - Apt 203</option>
+                                                <option>Torre B - Apt 204</option>
+                                                <option>Torre B - Apt 205</option>
+                                                <option>Torre C - Apt 501</option>
+                                                <option>Torre C - Apt 502</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="editType" class="block text-sm font-medium text-gray-700">Tipo</label>
+                                            <select id="editType" name="editType" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                                <option value="owner">Proprietário</option>
+                                                <option value="tenant">Inquilino</option>
+                                                <option value="relative">Familiar</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label for="editStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                                            <select id="editStatus" name="editStatus" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                                <option value="active">Ativo</option>
+                                                <option value="pending">Pendente</option>
+                                                <option value="inactive">Inativo</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label for="editProfilePhoto" class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
+                                            <div class="mt-1 flex items-center">
+                                                <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
+                                                    <img id="editProfilePhotoPreview" class="h-full w-full text-gray-300" src="" alt="">
+                                                </span>
+                                                <button type="button" class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                    Alterar
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label for="editNotes" class="block text-sm font-medium text-gray-700">Observações</label>
+                                            <textarea id="editNotes" name="editNotes" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="updateResident()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Atualizar Morador
+                    </button>
+                    <button type="button" onclick="closeEditResidentModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full fade-in slide-up">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-exclamation text-red-600"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Confirmar Exclusão
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Tem certeza que deseja remover este morador? Todos os dados associados a ele serão permanentemente removidos. Esta ação não pode ser desfeita.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="deleteResident()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Confirmar Exclusão
+                    </button>
+                    <button type="button" onclick="closeDeleteConfirmModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Resident data (mock)
+        const residents = [
+            {
+                id: 1,
+                name: "Maria Oliveira",
+                type: "owner",
+                phone: "(11) 98765-4321",
+                email: "maria.oliveira@email.com",
+                unit: "Torre A - Apt 302",
+                status: "active",
+                photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                notes: ""
+            },
+            {
+                id: 2,
+                name: "Carlos Souza",
+                type: "owner",
+                phone: "(11) 91234-5678",
+                email: "carlos.souza@email.com",
+                unit: "Torre B - Apt 105",
+                status: "active",
+                photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                notes: ""
+            },
+            {
+                id: 3,
+                name: "Ana Santos",
+                type: "tenant",
+                phone: "(11) 99876-5432",
+                email: "ana.santos@email.com",
+                unit: "Torre C - Apt 501",
+                status: "pending",
+                photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                notes: "Contrato até 12/2023"
+            },
+            {
+                id: 4,
+                name: "João Pereira",
+                type: "owner",
+                phone: "(11) 92345-6789",
+                email: "joao.pereira@email.com",
+                unit: "Torre A - Apt 201",
+                status: "active",
+                photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                notes: ""
+            },
+            {
+                id: 5,
+                name: "Pedro Almeida",
+                type: "tenant",
+                phone: "(11) 93456-7890",
+                email: "pedro.almeida@email.com",
+                unit: "Torre B - Apt 403",
+                status: "inactive",
+                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                notes: "Contrato encerrado"
+            }
+        ];
+
+        let residentToDelete = null;
+
+        // Modal functions
+        function openAddResidentModal() {
+            document.getElementById('addResidentModal').classList.remove('hidden');
+            document.getElementById('addResidentForm').reset();
+        }
+
+        function closeAddResidentModal() {
+            document.getElementById('addResidentModal').classList.add('hidden');
+        }
+
+        function openEditResidentModal(id) {
+            const resident = residents.find(r => r.id === id);
+            if (resident) {
+                document.getElementById('editResidentId').value = resident.id;
+                document.getElementById('editFullName').value = resident.name;
+                document.getElementById('editEmail').value = resident.email;
+                document.getElementById('editPhone').value = resident.phone;
+                document.getElementById('editUnit').value = resident.unit;
+                document.getElementById('editType').value = resident.type;
+                document.getElementById('editStatus').value = resident.status;
+                document.getElementById('editNotes').value = resident.notes;
+                document.getElementById('editProfilePhotoPreview').src = resident.photo;
+                
+                document.getElementById('editResidentModal').classList.remove('hidden');
+            }
+        }
+
+        function closeEditResidentModal() {
+            document.getElementById('editResidentModal').classList.add('hidden');
+        }
+
+        function openDeleteConfirmModal(id) {
+            residentToDelete = id;
+            document.getElementById('deleteConfirmModal').classList.remove('hidden');
+        }
+
+        function closeDeleteConfirmModal() {
+            residentToDelete = null;
+            document.getElementById('deleteConfirmModal').classList.add('hidden');
+        }
+
+        // CRUD functions
+        function saveResident() {
+            // In a real app, you would send this data to your backend
+            const formData = {
+                name: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                unit: document.getElementById('unit').value,
+                type: document.getElementById('type').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            console.log('Novo morador:', formData);
+            alert('Morador cadastrado com sucesso!');
+            closeAddResidentModal();
+            // You would then refresh the resident list
+        }
+
+        function updateResident() {
+            // In a real app, you would send this data to your backend
+            const id = document.getElementById('editResidentId').value;
+            const formData = {
+                name: document.getElementById('editFullName').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value,
+                unit: document.getElementById('editUnit').value,
+                type: document.getElementById('editType').value,
+                status: document.getElementById('editStatus').value,
+                notes: document.getElementById('editNotes').value
+            };
+            
+            console.log('Atualizando morador ID:', id, 'com dados:', formData);
+            alert('Morador atualizado com sucesso!');
+            closeEditResidentModal();
+            // You would then refresh the resident list
+        }
+
+        function deleteResident() {
+            if (residentToDelete) {
+                // In a real app, you would send a delete request to your backend
+                console.log('Removendo morador ID:', residentToDelete);
+                alert('Morador removido com sucesso!');
+                closeDeleteConfirmModal();
+                // You would then refresh the resident list
+            }
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.id === 'addResidentModal') {
+                closeAddResidentModal();
+            }
+            if (event.target.id === 'editResidentModal') {
+                closeEditResidentModal();
+            }
+            if (event.target.id === 'deleteConfirmModal') {
+                closeDeleteConfirmModal();
+            }
+        }
+    </script>
+</body>
+</html>

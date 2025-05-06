@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Chamados dos Moradores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chat-container {
+            height: calc(100vh - 200px);
+        }
+        .messages-container {
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-resolvido {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .status-pendente {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .status-nao-atendido {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .ticket-item:hover {
+            background-color: #f3f4f6;
+        }
+        .ticket-item.active {
+            background-color: #e5e7eb;
+            border-left: 4px solid #3b82f6;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 border-r border-gray-200 bg-white">
+                <div class="h-16 flex items-center px-4 border-b border-gray-200">
+                    <h1 class="text-xl font-bold text-gray-800">Condomínio Vista</h1>
+                </div>
+                <div class="flex-1 flex flex-col overflow-y-auto">
+                    <nav class="flex-1 px-2 py-4 space-y-1">
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md">
+                            <i class="fas fa-ticket-alt mr-3"></i>
+                            Chamados
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-users mr-3"></i>
+                            Moradores
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-building mr-3"></i>
+                            Unidades
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-envelope mr-3"></i>
+                            Mensagens
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md">
+                            <i class="fas fa-cog mr-3"></i>
+                            Configurações
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-gray-200">
+                    <div class="flex items-center">
+                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-700">Admin Silva</p>
+                            <p class="text-xs font-medium text-gray-500">Administrador</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 overflow-auto flex flex-col">
+            <!-- Header -->
+            <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200 bg-white">
+                <div class="flex items-center">
+                    <button class="md:hidden mr-4 text-gray-500">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="text-lg font-semibold text-gray-800">Chamados dos Moradores</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 flex overflow-hidden">
+                <!-- Tickets list -->
+                <div class="w-full md:w-1/3 border-r border-gray-200 bg-white overflow-y-auto">
+                    <div class="p-4 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-medium text-gray-800">Todos os Chamados</h3>
+                            <div class="relative">
+                                <select class="block appearance-none bg-gray-100 border border-gray-200 text-gray-700 py-1 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm">
+                                    <option>Filtrar por status</option>
+                                    <option>Todos</option>
+                                    <option>Resolvido</option>
+                                    <option>Pendente</option>
+                                    <option>Não atendido</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <!-- Ticket item -->
+                        <div class="ticket-item active p-4 cursor-pointer">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Vazamento na cozinha</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Torre A - Apt 302</p>
+                                </div>
+                                <span class="status-badge status-pendente">Pendente</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fas fa-user mr-1"></i>
+                                    <span>Maria Oliveira</span>
+                                </div>
+                                <span class="text-xs text-gray-400">Hoje, 09:15</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Ticket item -->
+                        <div class="ticket-item p-4 cursor-pointer">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Elevador quebrado</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Torre B</p>
+                                </div>
+                                <span class="status-badge status-resolvido">Resolvido</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fas fa-user mr-1"></i>
+                                    <span>Carlos Souza</span>
+                                </div>
+                                <span class="text-xs text-gray-400">Ontem, 14:30</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Ticket item -->
+                        <div class="ticket-item p-4 cursor-pointer">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Barulho excessivo</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Torre C - Apt 501</p>
+                                </div>
+                                <span class="status-badge status-nao-atendido">Não atendido</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fas fa-user mr-1"></i>
+                                    <span>Ana Santos</span>
+                                </div>
+                                <span class="text-xs text-gray-400">10/05, 22:45</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Ticket item -->
+                        <div class="ticket-item p-4 cursor-pointer">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Lâmpada queimada</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Área comum - Garagem</p>
+                                </div>
+                                <span class="status-badge status-resolvido">Resolvido</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fas fa-user mr-1"></i>
+                                    <span>João Pereira</span>
+                                </div>
+                                <span class="text-xs text-gray-400">08/05, 10:20</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Ticket item -->
+                        <div class="ticket-item p-4 cursor-pointer">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Problema no portão</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Portão principal</p>
+                                </div>
+                                <span class="status-badge status-pendente">Pendente</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fas fa-user mr-1"></i>
+                                    <span>Pedro Almeida</span>
+                                </div>
+                                <span class="text-xs text-gray-400">05/05, 18:10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ticket detail and chat -->
+                <div class="hidden md:flex flex-col flex-1 bg-gray-50">
+                    <div class="p-6 border-b border-gray-200 bg-white">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Vazamento na cozinha</h3>
+                                <div class="flex items-center mt-2">
+                                    <span class="status-badge status-pendente mr-3">Pendente</span>
+                                    <span class="text-sm text-gray-500">Criado em: 12/06/2023 09:15</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button id="statusDropdownBtn" class="flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                    Alterar status
+                                    <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                </button>
+                                <div id="statusDropdown" class="hidden absolute mt-8 w-40 bg-white rounded-md shadow-lg z-10">
+                                    <div class="py-1">
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="changeStatus('resolvido')">
+                                            <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                                            Resolvido
+                                        </a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="changeStatus('pendente')">
+                                            <span class="inline-block w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                                            Pendente
+                                        </a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="changeStatus('nao-atendido')">
+                                            <span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+                                            Não atendido
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                    <i class="fas fa-print mr-1"></i>
+                                    Imprimir
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-start">
+                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Maria Oliveira">
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-900">Maria Oliveira</p>
+                                    <p class="text-sm text-gray-500">Torre A - Apt 302</p>
+                                    <div class="mt-2 text-sm text-gray-700">
+                                        <p>Bom dia, estou com um problema de vazamento na pia da cozinha. A água está vazando pelo armário embaixo da pia e já está molhando o chão. Por favor, poderiam enviar alguém para verificar?</p>
+                                    </div>
+                                    <div class="mt-2">
+                                        <div class="inline-flex items-center text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                            <i class="fas fa-paperclip mr-1"></i>
+                                            <span>2 anexos</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat section -->
+                    <div class="flex-1 chat-container bg-white p-4">
+                        <div class="messages-container">
+                            <!-- Chat messages -->
+                            <div class="space-y-4">
+                                <!-- Resident message -->
+                                <div class="flex items-start">
+                                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Maria Oliveira">
+                                    <div class="ml-3">
+                                        <div class="bg-gray-100 rounded-lg py-2 px-4">
+                                            <p class="text-sm text-gray-800">Bom dia, estou com um problema de vazamento na pia da cozinha. A água está vazando pelo armário embaixo da pia e já está molhando o chão. Por favor, poderiam enviar alguém para verificar?</p>
+                                        </div>
+                                        <div class="mt-1 text-xs text-gray-500">
+                                            <span>Maria Oliveira - Hoje, 09:15</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Admin message -->
+                                <div class="flex items-start justify-end">
+                                    <div class="mr-3 text-right">
+                                        <div class="bg-blue-100 rounded-lg py-2 px-4">
+                                            <p class="text-sm text-gray-800">Bom dia Maria, já registramos seu chamado. Vamos enviar um técnico para verificar o problema ainda hoje. Por favor, mantenha o registro do vazamento e evite usar essa pia até a chegada do técnico.</p>
+                                        </div>
+                                        <div class="mt-1 text-xs text-gray-500">
+                                            <span>Você - Hoje, 09:30</span>
+                                        </div>
+                                    </div>
+                                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin Silva">
+                                </div>
+                                
+                                <!-- Resident message -->
+                                <div class="flex items-start">
+                                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Maria Oliveira">
+                                    <div class="ml-3">
+                                        <div class="bg-gray-100 rounded-lg py-2 px-4">
+                                            <p class="text-sm text-gray-800">Obrigada pela rápida resposta. Já coloquei um balde para conter a água. O técnico pode vir a qualquer momento, estarei em casa o dia todo.</p>
+                                        </div>
+                                        <div class="mt-1 text-xs text-gray-500">
+                                            <span>Maria Oliveira - Hoje, 09:35</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Admin message -->
+                                <div class="flex items-start justify-end">
+                                    <div class="mr-3 text-right">
+                                        <div class="bg-blue-100 rounded-lg py-2 px-4">
+                                            <p class="text-sm text-gray-800">Perfeito, Maria. O técnico José está a caminho e deve chegar em aproximadamente 30 minutos. Ele está com todos os equipamentos necessários para resolver o problema.</p>
+                                        </div>
+                                        <div class="mt-1 text-xs text-gray-500">
+                                            <span>Você - Hoje, 10:15</span>
+                                        </div>
+                                    </div>
+                                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin Silva">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Message input -->
+                        <div class="mt-4 border-t border-gray-200 pt-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin Silva">
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <form>
+                                        <div class="border border-gray-300 rounded-lg shadow-sm overflow-hidden">
+                                            <label for="message" class="sr-only">Mensagem</label>
+                                            <textarea rows="2" name="message" id="message" class="block w-full py-3 px-4 border-0 resize-none focus:ring-0 sm:text-sm" placeholder="Digite sua mensagem..."></textarea>
+                                            <div class="flex justify-between items-center px-4 py-2 bg-gray-50 border-t border-gray-200">
+                                                <div class="flex space-x-2">
+                                                    <button type="button" class="text-gray-400 hover:text-gray-500">
+                                                        <i class="fas fa-paperclip"></i>
+                                                        <span class="sr-only">Anexar arquivo</span>
+                                                    </button>
+                                                </div>
+                                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                    Enviar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to change ticket status
+        function changeStatus(status) {
+            const badge = document.querySelector('.ticket-item.active .status-badge');
+            
+            // Remove all status classes
+            badge.classList.remove('status-resolvido', 'status-pendente', 'status-nao-atendido');
+            
+            // Add the new status class
+            if (status === 'resolvido') {
+                badge.classList.add('status-resolvido');
+                badge.textContent = 'Resolvido';
+            } else if (status === 'pendente') {
+                badge.classList.add('status-pendente');
+                badge.textContent = 'Pendente';
+            } else if (status === 'nao-atendido') {
+                badge.classList.add('status-nao-atendido');
+                badge.textContent = 'Não atendido';
+            }
+            
+            // Close dropdown
+            document.getElementById('statusDropdown').classList.add('hidden');
+        }
+        
+        // Toggle status dropdown
+        document.getElementById('statusDropdownBtn').addEventListener('click', function() {
+            document.getElementById('statusDropdown').classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#statusDropdownBtn') && !event.target.closest('#statusDropdown')) {
+                document.getElementById('statusDropdown').classList.add('hidden');
+            }
+        });
+        
+        // Make ticket items clickable
+        document.querySelectorAll('.ticket-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.ticket-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

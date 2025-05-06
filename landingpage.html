@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CondoAI - A Revolução na Gestão Condominial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F52BA',
+                        secondary: '#2C3E50',
+                        accent: '#1E90FF',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'slide-right': 'slideRight 0.8s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideRight: {
+                            '0%': { transform: 'translateX(-30px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(15, 82, 186, 0.9) 0%, rgba(30, 144, 255, 0.9) 100%);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .scroll-hidden {
+            scrollbar-width: none;
+        }
+        .scroll-hidden::-webkit-scrollbar {
+            display: none;
+        }
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 scroll-smooth scroll-hidden">
+    <!-- Header/Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 animate-fade-in">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-building text-primary text-3xl mr-3"></i>
+                    <span class="text-2xl font-bold text-secondary">Condo<span class="text-primary">AI</span></span>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-secondary hover:text-primary font-medium transition duration-300">Recursos</a>
+                    <a href="#about" class="text-secondary hover:text-primary font-medium transition duration-300">Sobre</a>
+                    <a href="#waitlist" class="text-primary font-medium hover:underline transition duration-300">Lista de Espera</a>
+                    <a href="#" class="bg-primary text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300">Login</a>
+                </nav>
+                <button class="md:hidden text-secondary">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20 overflow-hidden">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0 animate-slide-right">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">O Futuro da Gestão Condominial Chegou</h1>
+                <p class="text-xl mb-8">CondoAI utiliza inteligência artificial para simplificar, automatizar e revolucionar a administração do seu condomínio. Economize tempo, reduza custos e aumente a satisfação dos moradores.</p>
+                <a href="#waitlist" class="bg-white text-primary font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-300 inline-block">Garanta seu acesso antecipado</a>
+            </div>
+            <div class="md:w-1/2 flex justify-center animate-slide-up">
+                <img src="https://images.unsplash.com/photo-1554469384-e58fac16e23a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Prédio moderno" class="rounded-xl shadow-2xl max-w-md w-full hover:scale-105 transition duration-500">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 animate-fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-4">Recursos Inovadores</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Descubra como o CondoAI pode transformar a gestão do seu condomínio</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-xl transition duration-300 animate-slide-up" style="animation-delay: 0.1s">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-secondary mb-3">Assistente Virtual 24/7</h3>
+                    <p class="text-gray-600">Nosso assistente AI responde dúvidas de moradores, agenda serviços e resolve problemas comuns automaticamente, reduzindo a carga de trabalho do síndico.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-xl transition duration-300 animate-slide-up" style="animation-delay: 0.2s">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-secondary mb-3">Monitoramento Inteligente</h3>
+                    <p class="text-gray-600">Integração com câmeras e sensores para identificar situações anormais, como vazamentos, intrusos ou áreas de risco, alertando em tempo real.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-xl transition duration-300 animate-slide-up" style="animation-delay: 0.3s">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-file-invoice-dollar text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-secondary mb-3">Gestão Financeira Automatizada</h3>
+                    <p class="text-gray-600">Cálculo automático de taxas condominiais, geração de boletos, previsão de custos e otimização de despesas com base em padrões do mercado.</p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-xl transition duration-300 animate-slide-up" style="animation-delay: 0.4s">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-calendar-check text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-secondary mb-3">Agendamento Inteligente</h3>
+                    <p class="text-gray-600">Sistema que gerencia reservas de áreas comuns, evitando conflitos e sugerindo horários ideais baseado no histórico de uso.</p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-xl transition duration-300 animate-slide-up" style="animation-delay: 0.5s">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-secondary mb-3">Relatórios Preditivos</h3>
+                    <p class="text-gray-600">Análise de dados para prever tendências, identificar problemas potencial e sugerir ações preventivas para melhorar a gestão.</p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-xl transition duration-300 animate-slide-up" style="animation-delay: 0.6s">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-comments text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-secondary mb-3">Comunicação Integrada</h3>
+                    <p class="text-gray-600">Plataforma unificada para envio de comunicados, enquetes e feedback dos moradores, com análise de sentiments para medir satisfação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 animate-slide-right">
+                    <img src="https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Equipe CondoAI" class="rounded-xl shadow-xl w-full hover:scale-105 transition duration-500">
+                </div>
+                <div class="md:w-1/2 md:pl-12 animate-slide-up">
+                    <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-6">Sobre o CondoAI</h2>
+                    <p class="text-gray-600 mb-6">Fundada por especialistas em tecnologia e gestão condominial, a CondoAI nasceu da necessidade de modernizar um setor ainda muito tradicional e burocrático.</p>
+                    <p class="text-gray-600 mb-8">Nossa missão é empoderar síndicos e administradoras com ferramentas inteligentes que simplificam processos, reduzem custos e melhoram a qualidade de vida nos condomínios.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="bg-primary bg-opacity-10 px-4 py-2 rounded-full">
+                            <span class="text-primary font-medium">+50 condomínios</span>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 px-4 py-2 rounded-full">
+                            <span class="text-primary font-medium">90% de satisfação</span>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 px-4 py-2 rounded-full">
+                            <span class="text-primary font-medium">24/7 disponível</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waitlist Section -->
+    <section id="waitlist" class="hero-gradient text-white py-20">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-12 animate-fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Garanta Seu Acesso Antecipado</h2>
+                <p class="text-xl">Estamos lançando em breve! Cadastre-se para ter prioridade e condições exclusivas.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm p-8 md:p-10 rounded-xl border border-white border-opacity-20 animate-slide-up">
+                <form class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-white font-medium mb-2">Nome Completo</label>
+                            <input type="text" id="name" class="w-full px-4 py-3 bg-white bg-opacity-10 border border-white border-opacity-30 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent placeholder-white placeholder-opacity-70" placeholder="Seu nome">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-white font-medium mb-2">E-mail</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 bg-white bg-opacity-10 border border-white border-opacity-30 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent placeholder-white placeholder-opacity-70" placeholder="seu@email.com">
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="condominium" class="block text-white font-medium mb-2">Nome do Condomínio</label>
+                            <input type="text" id="condominium" class="w-full px-4 py-3 bg-white bg-opacity-10 border border-white border-opacity-30 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent placeholder-white placeholder-opacity-70" placeholder="Ex: Edifício Primavera">
+                        </div>
+                        <div>
+                            <label for="units" class="block text-white font-medium mb-2">Quantidade de Unidades</label>
+                            <select id="units" class="w-full px-4 py-3 bg-white bg-opacity-10 border border-white border-opacity-30 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent text-white">
+                                <option value="" class="text-secondary">Selecione</option>
+                                <option value="1-20" class="text-secondary">1-20 unidades</option>
+                                <option value="21-50" class="text-secondary">21-50 unidades</option>
+                                <option value="51-100" class="text-secondary">51-100 unidades</option>
+                                <option value="101-200" class="text-secondary">101-200 unidades</option>
+                                <option value="200+" class="text-secondary">Mais de 200 unidades</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="role" class="block text-white font-medium mb-2">Você é:</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div>
+                                <input type="radio" id="syndic" name="role" value="syndic" class="hidden peer">
+                                <label for="syndic" class="inline-flex justify-between items-center p-3 w-full text-white bg-white bg-opacity-10 rounded-lg border border-white border-opacity-30 cursor-pointer peer-checked:border-white peer-checked:bg-white peer-checked:bg-opacity-20 peer-checked:text-white">
+                                    <div class="block">
+                                        <div class="w-full text-center font-medium">Síndico</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" id="resident" name="role" value="resident" class="hidden peer">
+                                <label for="resident" class="inline-flex justify-between items-center p-3 w-full text-white bg-white bg-opacity-10 rounded-lg border border-white border-opacity-30 cursor-pointer peer-checked:border-white peer-checked:bg-white peer-checked:bg-opacity-20 peer-checked:text-white">
+                                    <div class="block">
+                                        <div class="w-full text-center font-medium">Morador</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio id="manager" name="role" value="manager" class="hidden peer">
+                                <label for="manager" class="inline-flex justify-between items-center p-3 w-full text-white bg-white bg-opacity-10 rounded-lg border border-white border-opacity-30 cursor-pointer peer-checked:border-white peer-checked:bg-white peer-checked:bg-opacity-20 peer-checked:text-white">
+                                    <div class="block">
+                                        <div class="w-full text-center font-medium">Administrador</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" id="other" name="role" value="other" class="hidden peer">
+                                <label for="other" class="inline-flex justify-between items-center p-3 w-full text-white bg-white bg-opacity-10 rounded-lg border border-white border-opacity-30 cursor-pointer peer-checked:border-white peer-checked:bg-white peer-checked:bg-opacity-20 peer-checked:text-white">
+                                    <div class="block">
+                                        <div class="w-full text-center font-medium">Outro</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="terms" type="checkbox" class="w-4 h-4 text-primary bg-white bg-opacity-10 border-white border-opacity-30 rounded focus:ring-primary">
+                        <label for="terms" class="ml-2 text-sm text-white text-opacity-90">Concordo em receber comunicações sobre o CondoAI</label>
+                    </div>
+                    <button type="submit" class="w-full bg-white text-primary font-bold py-4 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">Entrar na Lista de Espera</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-16 animate-fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-4">Perguntas Frequentes</h2>
+                <p class="text-xl text-gray-600">Tire suas dúvidas sobre o CondoAI</p>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item bg-gray-50 rounded-xl overflow-hidden transition duration-300 animate-slide-up" style="animation-delay: 0.1s">
+                    <details class="group">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer">
+                            <h3 class="text-lg font-medium text-secondary">Como o CondoAI se integra com os sistemas existentes do condomínio?</h3>
+                            <div class="text-primary">
+                                <i class="fas fa-plus group-open:hidden"></i>
+                                <i class="fas fa-minus hidden group-open:inline"></i>
+                            </div>
+                        </summary>
+                        <div class="px-6 pb-6 pt-0 text-gray-600">
+                            <p>O CondoAI possui APIs abertas que permitem integração com os principais sistemas de gestão condominial, portarias eletrônicas e sistemas de segurança. Nossa equipe técnica auxilia no processo de migração e integração sem custos adicionais.</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item bg-gray-50 rounded-xl overflow-hidden transition duration-300 animate-slide-up" style="animation-delay: 0.2s">
+                    <details class="group">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer">
+                            <h3 class="text-lg font-medium text-secondary">Quais são os requisitos técnicos para utilizar o CondoAI?</h3>
+                            <div class="text-primary">
+                                <i class="fas fa-plus group-open:hidden"></i>
+                                <i class="fas fa-minus hidden group-open:inline"></i>
+                            </div>
+                        </summary>
+                        <div class="px-6 pb-6 pt-0 text-gray-600">
+                            <p>O CondoAI é uma plataforma 100% na nuvem, acessível por qualquer dispositivo com internet. Não requer instalação de software ou hardware específico, apenas um navegador moderno (Chrome, Firefox, Safari ou Edge). Para integração com câmeras e sensores, verificamos a compatibilidade caso a caso.</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item bg-gray-50 rounded-xl overflow-hidden transition duration-300 animate-slide-up" style="animation-delay: 0.3s">
+                    <details class="group">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer">
+                            <h3 class="text-lg font-medium text-secondary">Como é calculado o valor do serviço?</h3>
+                            <div class="text-primary">
+                                <i class="fas fa-plus group-open:hidden"></i>
+                                <i class="fas fa-minus hidden group-open:inline"></i>
+                            </div>
+                        </summary>
+                        <div class="px-6 pb-6 pt-0 text-gray-600">
+                            <p>O valor é baseado no número de unidades do condomínio e nos módulos contratados. Temos planos flexíveis que se adaptam desde pequenos edifícios até grandes condomínios horizontais. Em média, nossos clientes economizam 15-30% nos custos operacionais, tornando o investimento altamente vantajoso.</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item bg-gray-50 rounded-xl overflow-hidden transition duration-300 animate-slide-up" style="animation-delay: 0.4s">
+                    <details class="group">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer">
+                            <h3 class="text-lg font-medium text-secondary">Como começo a usar o serviço?</h3>
+                            <div class="text-primary">
+                                <i class="fas fa-plus group-open:hidden"></i>
+                                <i class="fas fa-minus hidden group-open:inline"></i>
+                            </div>
+                        </summary>
+                        <div class="px-6 pb-6 pt-0 text-gray-600">
+                            <p>Para começar, basta se cadastrar na nossa lista de espera. Quando o serviço estiver disponível para seu condomínio, você receberá um convite por e-mail. Ao acessar o sistema pela primeira vez, nossa IA irá guiá-lo por um processo de captação de dados específicos do seu condomínio, moldando a experiência para atender exatamente às suas necessidades.</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="faq-item bg-gray-50 rounded-xl overflow-hidden transition duration-300 animate-slide-up" style="animation-delay: 0.5s">
+                    <details class="group">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer">
+                            <h3 class="text-lg font-medium text-secondary">Os dados do condomínio ficam seguros?</h3>
+                            <div class="text-primary">
+                                <i class="fas fa-plus group-open:hidden"></i>
+                                <i class="fas fa-minus hidden group-open:inline"></i>
+                            </div>
+                        </summary>
+                        <div class="px-6 pb-6 pt-0 text-gray-600">
+                            <p>Sim, utilizamos criptografia de ponta a ponta e servidores localizados no Brasil, em conformidade com a LGPD. Realizamos backups diários e temos protocolos rigorosos de segurança. Cada condomínio tem seu ambiente isolado e controle total sobre quem acessa quais informações.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="animate-slide-up" style="animation-delay: 0.1s">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-building text-primary text-3xl mr-3"></i>
+                        <span class="text-2xl font-bold">Condo<span class="text-primary">AI</span></span>
+                    </div>
+                    <p class="text-gray-300">A revolução na gestão condominial através da inteligência artificial.</p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="animate-slide-up" style="animation-delay: 0.2s">
+                    <h3 class="text-lg font-bold mb-4">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-300 hover:text-white transition duration-300">Recursos</a></li>
+                        <li><a href="#about" class="text-gray-300 hover:text-white transition duration-300">Sobre Nós</a></li>
+                        <li><a href="#waitlist" class="text-gray-300 hover:text-white transition duration-300">Lista de Espera</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="animate-slide-up" style="animation-delay: 0.3s">
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Termos de Uso</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Política de Privacidade</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">LGPD</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Contrato de Serviço</a></li>
+                    </ul>
+                </div>
+                
+                <div class="animate-slide-up" style="animation-delay: 0.4s">
+                    <h3 class="text-lg font-bold mb-4">Contato</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-300">Av. Paulista, 1000<br>São Paulo - SP, 01310-200</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt text-primary mr-3"></i>
+                            <span class="text-gray-300">(11) 4002-8922</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-primary mr-3"></i>
+                            <span class="text-gray-300">contato@condoai.com.br</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 CondoAI. Todos os direitos reservados.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 text-sm">Termos</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 text-sm">Privacidade</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 text-sm">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value;
+            const condominium = document.getElementById('condominium').value;
+            const units = document.getElementById('units').value;
+            const terms = document.getElementById('terms').checked;
+            
+            if (!name || !email || !condominium || !units || !terms) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios e aceite os termos.');
+            }
+        });
+
+        // Mobile menu toggle (placeholder)
+        document.querySelector('header button').addEventListener('click', function() {
+            alert('Menu mobile será implementado aqui');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
